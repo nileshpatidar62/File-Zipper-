@@ -1,4 +1,4 @@
-#ifndef HUFFMAN_H
+ #ifndef HUFFMAN_H
 #define HUFFMAN_H
 
 #include <iostream>
@@ -10,35 +10,48 @@
 
 using namespace std;
 
-// =======================
-// Huffman Tree Node
-// =======================
-class Node
+//=========================================================
+//                  Huffman Tree Node
+//=========================================================
+
+struct Node
 {
-public:
     char data;
     int frequency;
 
     Node* left;
     Node* right;
 
-    Node(char ch, int freq);
+    Node(char ch, int freq)
+    {
+        data = ch;
+        frequency = freq;
+        left = nullptr;
+        right = nullptr;
+    }
 
-    bool isLeaf() const;
+    bool isLeaf() const
+    {
+        return left == nullptr && right == nullptr;
+    }
 };
 
-// =======================
-// Comparator for Min Heap
-// =======================
-class Compare
+//=========================================================
+//          Comparator for Min Priority Queue
+//=========================================================
+
+struct Compare
 {
-public:
-    bool operator()(Node* left, Node* right);
+    bool operator()(Node* a, Node* b)
+    {
+        return a->frequency > b->frequency;
+    }
 };
 
-// =======================
-// Huffman Class
-// =======================
+//=========================================================
+//                  Huffman Class
+//=========================================================
+
 class Huffman
 {
 private:
@@ -52,43 +65,25 @@ private:
     // Build frequency table
     void buildFrequencyTable(const string& text);
 
-    // Build Huffman Tree
-    void buildHuffmanTree();
+    // Construct Huffman Tree
+    void buildTree();
 
-    // Generate Binary Codes
+    // Generate binary codes
     void generateCodes(Node* node, string code);
 
-    // Encode text
+    // Encode text into bit string
     string encode(const string& text);
 
-    // Decode binary string
+    // Decode bit string
     string decode(const string& bits);
 
-    // Delete Tree
+    // Free memory
     void deleteTree(Node* node);
 
-    // Save compressed file
-    bool writeCompressedFile(
-        const string& filename,
-        const string& encodedData
-    );
-
-    // Read compressed file
-    bool readCompressedFile(
-        const string& filename,
-        string& encodedData
-    );
-
-    // Save frequency table
-    void writeFrequencyTable(ofstream& out);
-
-    // Read frequency table
-    void readFrequencyTable(ifstream& in);
-
-    // Compression Statistics
+    // Display compression information
     void displayStatistics(
-        size_t originalSize,
-        size_t compressedBits
+        size_t originalBytes,
+        size_t compressedBytes
     );
 
 public:
@@ -97,15 +92,24 @@ public:
 
     ~Huffman();
 
+    // Compress file
     bool compress(
         const string& inputFile,
         const string& outputFile
     );
 
+    // Decompress file
     bool decompress(
         const string& inputFile,
         const string& outputFile
     );
+
+    // Getters
+    unordered_map<char,int>& getFrequencyTable();
+
+    unordered_map<char,string>& getCodeTable();
+
+    Node* getRoot();
 };
 
 #endif

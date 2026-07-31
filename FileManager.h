@@ -1,11 +1,11 @@
-#ifndef FILEMANAGER_H
+ #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -13,60 +13,51 @@ class FileManager
 {
 public:
 
-    // Constructor
     FileManager();
-
-    // Destructor
     ~FileManager();
 
-    //==============================
+    //=================================================
     // Text File Operations
-    //==============================
+    //=================================================
 
-    // Read entire text file
+    // Read complete text file
     bool readTextFile(
         const string& filename,
         string& text
     );
 
-    // Write text to file
+    // Write decompressed text
     bool writeTextFile(
         const string& filename,
         const string& text
     );
 
-    //==============================
-    // Binary File Operations
-    //==============================
+    //=================================================
+    // Binary Compression File
+    //=================================================
 
-    // Save compressed data
     bool writeCompressedFile(
         const string& filename,
         const unordered_map<char, int>& frequencyTable,
-        const string& encodedBits
+        const vector<unsigned char>& compressedData,
+        int validBits
     );
 
-    // Load compressed data
     bool readCompressedFile(
         const string& filename,
         unordered_map<char, int>& frequencyTable,
-        string& encodedBits
+        vector<unsigned char>& compressedData,
+        int& validBits
     );
 
-private:
+    //=================================================
+    // Bit Conversion
+    //=================================================
 
-    //==============================
-    // Helper Functions
-    //==============================
-
-    // Convert bit string (010101...)
-    // into binary bytes
     vector<unsigned char> packBits(
-        const string& bits
+        const string& bitString
     );
 
-    // Convert bytes back
-    // into bit string
     string unpackBits(
         const vector<unsigned char>& bytes,
         int validBits

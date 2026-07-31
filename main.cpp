@@ -1,82 +1,120 @@
-#include <iostream>
+ #include <iostream>
+#include <limits>
 #include <string>
+
 #include "Huffman.h"
+#include "FileManager.h"
 
 using namespace std;
 
-void printMenu()
+void printHeader()
 {
-    cout << "\n=============================================\n";
+    cout << "=============================================\n";
     cout << "   HUFFMAN FILE COMPRESSION SYSTEM\n";
     cout << "=============================================\n";
-    cout << "1. Compress File\n";
+}
+
+void printMenu()
+{
+    cout << "\n1. Compress File\n";
     cout << "2. Decompress File\n";
     cout << "3. Exit\n";
-    cout << "=============================================\n";
-    cout << "Enter your choice: ";
+    cout << "\nEnter your choice: ";
 }
 
 int main()
 {
     Huffman huffman;
+    FileManager fileManager;
+
     int choice;
 
     while (true)
     {
+        printHeader();
         printMenu();
 
-        cin >> choice;
-        cin.ignore();
-
-        if (choice == 1)
+        if (!(cin >> choice))
         {
-            string inputFile;
-            string outputFile;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            cout << "\nEnter input text file: ";
-            getline(cin, inputFile);
+            cout << "\nInvalid input.\n\n";
+            continue;
+        }
 
-            cout << "Enter compressed file name (.huff): ";
-            getline(cin, outputFile);
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            if (huffman.compress(inputFile, outputFile))
+        switch (choice)
+        {
+            case 1:
             {
-                cout << "\nCompression Successful!\n";
+                string inputFile;
+                string outputFile;
+
+                cout << "\nEnter input text file: ";
+                getline(cin, inputFile);
+
+                cout << "Enter output compressed file (.huff): ";
+                getline(cin, outputFile);
+
+                if (huffman.compress(inputFile, outputFile))
+                {
+                    cout << "\n=====================================\n";
+                    cout << "Compression Successful.\n";
+                    cout << "Output File : " << outputFile << endl;
+                    cout << "=====================================\n";
+                }
+                else
+                {
+                    cout << "\nCompression Failed.\n";
+                }
+
+                break;
             }
-            else
+
+            case 2:
             {
-                cout << "\nCompression Failed!\n";
+                string inputFile;
+                string outputFile;
+
+                cout << "\nEnter compressed file (.huff): ";
+                getline(cin, inputFile);
+
+                cout << "Enter output text file: ";
+                getline(cin, outputFile);
+
+                if (huffman.decompress(inputFile, outputFile))
+                {
+                    cout << "\n=====================================\n";
+                    cout << "Decompression Successful.\n";
+                    cout << "Output File : " << outputFile << endl;
+                    cout << "=====================================\n";
+                }
+                else
+                {
+                    cout << "\nDecompression Failed.\n";
+                }
+
+                break;
+            }
+
+            case 3:
+            {
+                cout << "\nThank you for using Huffman Compressor.\n";
+                return 0;
+            }
+
+            default:
+            {
+                cout << "\nPlease enter a valid choice (1-3).\n";
             }
         }
-        else if (choice == 2)
-        {
-            string inputFile;
-            string outputFile;
 
-            cout << "\nEnter compressed file (.huff): ";
-            getline(cin, inputFile);
+        cout << "\nPress Enter to continue...";
+        cin.get();
 
-            cout << "Enter output text file: ";
-            getline(cin, outputFile);
-
-            if (huffman.decompress(inputFile, outputFile))
-            {
-                cout << "\nDecompression Successful!\n";
-            }
-            else
-            {
-                cout << "\nDecompression Failed!\n";
-            }
-        }
-        else if (choice == 3)
-        {
-            cout << "\nThank you for using Huffman Compressor.\n";
-            break;
-        }
-        else
-        {
-            cout << "\nInvalid Choice!\n";
-        }
+        cout << "\n\n";
     }
 
     return 0;
